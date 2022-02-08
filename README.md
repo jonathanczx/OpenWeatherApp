@@ -33,6 +33,7 @@ Build the application for production:
 
 ```bash
 yarn build
+npx nuxi preview
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
