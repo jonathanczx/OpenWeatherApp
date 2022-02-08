@@ -56,7 +56,7 @@
     <div class="row mt-5">
       <div class="col-12 d-flex flex-column">
         <label for="location-input">Search Locations:</label>
-        <input class="form-control" v-model="location"/>
+        <input class="form-control" v-model="location" @keyup.enter="search" />
         <button class="btn btn-success my-2" @click="search">Search</button>
       </div>
     </div>
@@ -97,36 +97,49 @@ export default {
     }
   },
   methods: {
+    /**
+     * Search functionality with some very basic caching.
+     */
     search: async function (){
       if(this.location) {
-        const { data } = await useFetch(`/api/search?query=${this.location}`);
-        this.locations = data.value;
+        const url = `/api/search?query=${this.location}`;
+        if(localStorage.getItem(url)) {
+          this.locations = JSON.parse(localStorage.getItem(url)) || null;
+        } else {
+          const { data } = await useFetch(url);
+          localStorage.setItem(url, JSON.stringify(data.value));
+          this.locations = data.value;
+        }
       }
     },
     getWeather: async function (lat, lon) {
-      return await useFetch(`/api/weather?lat=${lat}&lon=${lon}`);
+      const url = `/api/weather?lat=${lat}&lon=${lon}`;
+      const { data } = await useFetch(url);
+      return data.value;
     },
     getDaily: async function (lat, lon) {
-      return await useFetch(`/api/daily?lat=${lat}&lon=${lon}`);
+      const url = `/api/daily?lat=${lat}&lon=${lon}`;
+      const { data } = await useFetch(url);
+      return data.value;
     },
     getSingaporeWeather: function () {
       this.getWeather(1.2904753, 103.8520359)
         .then(res => {
-          this.singapore = res.data.value;
+          this.singapore = res;
         });
       this.getDaily(1.2904753, 103.8520359)
         .then(res => {
-          this.dailySingapore = res.data.value;
+          this.dailySingapore = res;
         })
     },
     getBrisbaneWeather: function () {
       this.getWeather(-27.470125, 153.021072)
         .then(res => {
-          this.brisbane = res.data.value;
+          this.brisbane = res;
         });
       this.getDaily(-27.470125, 153.021072)
         .then(res => {
-          this.dailyBrisbane = res.data.value;
+          this.dailyBrisbane = res;
         })
     },
   }
