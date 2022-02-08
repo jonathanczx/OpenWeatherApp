@@ -1,5 +1,6 @@
 import OpenWeatherApi from '../../open_weather_api/api';
 import { useQuery } from 'h3';
+import config from "#config";
 
 /**
  * Sample result
@@ -49,16 +50,16 @@ import { useQuery } from 'h3';
     }
  */
 export default async (req, res) => {
-    const query = await useQuery(req);
-    const lat = query.lat;
-    const lon = query.lon;
+  const query = await useQuery(req);
+  const lat = query.lat;
+  const lon = query.lon;
 
-    return await $fetch(`${OpenWeatherApi.dataUrl}/weather`, {
-        params: {
-            lat,
-            lon,
-            appid: OpenWeatherApi.apiKey,
-            units: 'metric'
-        }
-    });
-}
+  return await $fetch(`${OpenWeatherApi.dataUrl}/weather`, {
+    params: {
+      lat,
+      lon,
+      appid: config.openWeatherApiKey,
+      units: "metric",
+    },
+  });
+};
