@@ -10,6 +10,13 @@ Make sure to install the dependencies
 yarn install
 ```
 
+## .env file
+
+Make sure to add the OpenWeatherMap API Key
+```
+OPEN_WEATHER_API_KEY=
+```
+
 ## Development
 
 Start the development server on http://localhost:3000
